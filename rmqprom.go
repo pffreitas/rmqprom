@@ -43,31 +43,31 @@ func registerCounters(connection rmq.Connection) map[string]queueStatsCounters {
 		counters[queue] = queueStatsCounters{
 			readyCount: prometheus.NewCounter(prometheus.CounterOpts{
 				Namespace:   "rmq",
-				Name:        "rmq_ready_count",
+				Name:        "ready_count",
 				Help:        "Number of ready messages on queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
 			rejectedCount: prometheus.NewCounter(prometheus.CounterOpts{
 				Namespace:   "rmq",
-				Name:        "rmq_rejected_count",
+				Name:        "rejected_count",
 				Help:        "Number of rejected messages on queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
 			connectionCount: prometheus.NewCounter(prometheus.CounterOpts{
 				Namespace:   "rmq",
-				Name:        "rmq_connection_count",
+				Name:        "connection_count",
 				Help:        "Number of connections consuming a queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
 			consumerCount: prometheus.NewCounter(prometheus.CounterOpts{
 				Namespace:   "rmq",
-				Name:        "rmq_consumer_count",
+				Name:        "consumer_count",
 				Help:        "Number of consumers consuming messages for a queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
 			unackedCount: prometheus.NewCounter(prometheus.CounterOpts{
 				Namespace:   "rmq",
-				Name:        "rmq_unacked_count",
+				Name:        "unacked_count",
 				Help:        "Number of unacked messages on a consumer",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
