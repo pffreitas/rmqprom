@@ -1,4 +1,4 @@
-module github.com/pffreitas/rmq-prom-metrics
+module github.com/pffreitas/rmqprom
 
 go 1.13
 
