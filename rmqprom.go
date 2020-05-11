@@ -8,11 +8,11 @@ import (
 )
 
 type queueStatsCounters struct {
-	readyCount      prometheus.Counter
-	rejectedCount   prometheus.Counter
-	connectionCount prometheus.Counter
-	consumerCount   prometheus.Counter
-	unackedCount    prometheus.Counter
+	readyCount      prometheus.Gauge
+	rejectedCount   prometheus.Gauge
+	connectionCount prometheus.Gauge
+	consumerCount   prometheus.Gauge
+	unackedCount    prometheus.Gauge
 }
 
 func RecordRmqMetrics(connection rmq.Connection) {
@@ -23,11 +23,11 @@ func RecordRmqMetrics(connection rmq.Connection) {
 			stats := connection.CollectStats(connection.GetOpenQueues())
 			for queue, queueStats := range stats.QueueStats {
 				if counter, ok := counters[queue]; ok {
-					counter.readyCount.Add(float64(queueStats.ReadyCount))
-					counter.rejectedCount.Add(float64(queueStats.RejectedCount))
-					counter.connectionCount.Add(float64(queueStats.ConnectionCount()))
-					counter.consumerCount.Add(float64(queueStats.ConsumerCount()))
-					counter.unackedCount.Add(float64(queueStats.UnackedCount()))
+					counter.readyCount.Set(float64(queueStats.ReadyCount))
+					counter.rejectedCount.Set(float64(queueStats.RejectedCount))
+					counter.connectionCount.Set(float64(queueStats.ConnectionCount()))
+					counter.consumerCount.Set(float64(queueStats.ConsumerCount()))
+					counter.unackedCount.Set(float64(queueStats.UnackedCount()))
 				}
 			}
 
@@ -41,33 +41,33 @@ func registerCounters(connection rmq.Connection) map[string]queueStatsCounters {
 
 	for _, queue := range connection.GetOpenQueues() {
 		counters[queue] = queueStatsCounters{
-			readyCount: prometheus.NewCounter(prometheus.CounterOpts{
+			readyCount: prometheus.NewGauge(prometheus.GaugeOpts{
 				Namespace:   "rmq",
-				Name:        "ready_count",
+				Name:        "ready",
 				Help:        "Number of ready messages on queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
-			rejectedCount: prometheus.NewCounter(prometheus.CounterOpts{
+			rejectedCount: prometheus.NewGauge(prometheus.GaugeOpts{
 				Namespace:   "rmq",
-				Name:        "rejected_count",
+				Name:        "rejected",
 				Help:        "Number of rejected messages on queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
-			connectionCount: prometheus.NewCounter(prometheus.CounterOpts{
+			connectionCount: prometheus.NewGauge(prometheus.GaugeOpts{
 				Namespace:   "rmq",
-				Name:        "connection_count",
+				Name:        "connection",
 				Help:        "Number of connections consuming a queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
-			consumerCount: prometheus.NewCounter(prometheus.CounterOpts{
+			consumerCount: prometheus.NewGauge(prometheus.GaugeOpts{
 				Namespace:   "rmq",
-				Name:        "consumer_count",
+				Name:        "consumer",
 				Help:        "Number of consumers consuming messages for a queue",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
-			unackedCount: prometheus.NewCounter(prometheus.CounterOpts{
+			unackedCount: prometheus.NewGauge(prometheus.GaugeOpts{
 				Namespace:   "rmq",
-				Name:        "unacked_count",
+				Name:        "unacked",
 				Help:        "Number of unacked messages on a consumer",
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
