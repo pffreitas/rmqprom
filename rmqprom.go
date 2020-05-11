@@ -72,6 +72,12 @@ func registerCounters(connection rmq.Connection) map[string]queueStatsCounters {
 				ConstLabels: prometheus.Labels{"queue": queue},
 			}),
 		}
+
+		prometheus.MustRegister(counters[queue].readyCount)
+		prometheus.MustRegister(counters[queue].rejectedCount)
+		prometheus.MustRegister(counters[queue].connectionCount)
+		prometheus.MustRegister(counters[queue].consumerCount)
+		prometheus.MustRegister(counters[queue].unackedCount)
 	}
 
 	return counters
