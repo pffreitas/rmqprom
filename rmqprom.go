@@ -20,7 +20,8 @@ func RecordRmqMetrics(connection rmq.Connection) {
 
 	go func() {
 		for {
-			stats := connection.CollectStats(connection.GetOpenQueues())
+			queues, _ := connection.GetOpenQueues()
+			stats, _ := connection.CollectStats(queues)
 			for queue, queueStats := range stats.QueueStats {
 				if counter, ok := counters[queue]; ok {
 					counter.readyCount.Set(float64(queueStats.ReadyCount))
@@ -39,7 +40,8 @@ func RecordRmqMetrics(connection rmq.Connection) {
 func registerCounters(connection rmq.Connection) map[string]queueStatsCounters {
 	counters := map[string]queueStatsCounters{}
 
-	for _, queue := range connection.GetOpenQueues() {
+	queues, _ := connection.GetOpenQueues()
+	for _, queue := range queues {
 		counters[queue] = queueStatsCounters{
 			readyCount: prometheus.NewGauge(prometheus.GaugeOpts{
 				Namespace:   "rmq",
