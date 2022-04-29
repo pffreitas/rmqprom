@@ -3,7 +3,7 @@ package rmqprom
 import (
 	"time"
 
-	"github.com/adjust/rmq/v3"
+	"github.com/adjust/rmq/v4"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
